@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:phonenumberauth/constants/sizedbox.dart';
+import 'package:phonenumberauth/controller/auth_provider.dart';
 import 'package:phonenumberauth/helper/colors.dart';
+import 'package:phonenumberauth/view/home/home_screen.dart';
 import 'package:phonenumberauth/view/registration_screen/registration_screen.dart';
 import 'package:phonenumberauth/widget/custom_button.dart';
-
+import 'package:provider/provider.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final ap = Provider.of<AuthProvider>(context, listen: false);
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -45,11 +48,17 @@ class WelcomeScreen extends StatelessWidget {
                   child: CustomButton(
                     text: "Get Started",
                     onpressed: () {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) => const RegistrationScreen(),
-                        ),
-                      );
+                      ap.isSignedIn == true // when true then fetch sharedpreference data
+                          ? Navigator.of(context)
+                              .pushReplacement(MaterialPageRoute(
+                              builder: (context) => const HomeScreen(),
+                            ))
+                          : Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const RegistrationScreen(),
+                              ),
+                            );
                     },
                   ),
                 ),

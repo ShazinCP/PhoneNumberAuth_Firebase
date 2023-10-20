@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "849724845256",
+    "project_id": "phonenumberauth-bf808",
+    "storage_bucket": "phonenumberauth-bf808.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:849724845256:android:8b4f77f0e8c0e69e0289fd",
+        "android_client_info": {
+          "package_name": "com.example.phonenumberauth"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWrGDLUCn7-y-6JOMhA48OeVwhXpM3dEE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
