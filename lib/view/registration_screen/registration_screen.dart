@@ -48,7 +48,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: cPurpleColorShade,
+                    color: cPurpleColorShade50,
                   ),
                   child: Image.asset("assets/image2.png"),
                 ),
