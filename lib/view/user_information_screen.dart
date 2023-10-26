@@ -156,7 +156,7 @@ class _UserInformationScreenState extends State<UserInformationScreen> {
         },
       );
     } else {
-      showSnackbar(context, "Please upload your profile photo");
+      showSnackBar(context, "Please upload your profile photo");
     }
   }
 }

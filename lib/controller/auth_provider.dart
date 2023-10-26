@@ -41,61 +41,64 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-// signin
+  // Signin
   void signInWithPhone(BuildContext context, String phoneNumber) async {
     try {
       await _firebaseAuth.verifyPhoneNumber(
-        phoneNumber: phoneNumber,
-        verificationCompleted: (PhoneAuthCredential phoneAuthCredential) async {
-          await _firebaseAuth.signInWithCredential(phoneAuthCredential);
-        },
-        verificationFailed: (error) {
-          throw Exception(error.message);
-        },
-        codeSent: (verificationId, forceResendingToken) {
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => OtpScreen(verificationId: verificationId),
-          ));
-        },
-        codeAutoRetrievalTimeout: (verificationId) {},
-      );
+          phoneNumber: phoneNumber,
+          verificationCompleted:
+              (PhoneAuthCredential phoneAuthCredential) async {
+            await _firebaseAuth.signInWithCredential(phoneAuthCredential);
+          },
+          verificationFailed: (error) {
+            throw Exception(error.message);
+          },
+          codeSent: (verificationId, forceResendingToken) {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => OtpScreen(verificationId: verificationId),
+              ),
+            );
+          },
+          codeAutoRetrievalTimeout: (verificationId) {});
     } on FirebaseAuthException catch (e) {
       // ignore: use_build_context_synchronously
-      showSnackbar(context, e.message.toString());
+      showSnackBar(context, e.message.toString());
     }
   }
 
   // verify otp
-  void verifyOtp(
-      {required BuildContext context,
-      required String verificationId,
-      required String userOtp,
-      required Function onSuccess}) async {
+  void verifyOtp({
+    required BuildContext context,
+    required String verificationId,
+    required String userOtp,
+    required Function onSuccess,
+  }) async {
     _isLoading = true;
     notifyListeners();
 
     try {
       PhoneAuthCredential creds = PhoneAuthProvider.credential(
           verificationId: verificationId, smsCode: userOtp);
-      User? user = (await _firebaseAuth.signInWithCredential(creds)).user!;
+
+      User? user = (await _firebaseAuth.signInWithCredential(creds)).user;
 
       if (user != null) {
-        //carry our logic
+        // carry our logic
         _uid = user.uid;
         onSuccess();
       }
-
       _isLoading = false;
       notifyListeners();
     } on FirebaseAuthException catch (e) {
       // ignore: use_build_context_synchronously
-      showSnackbar(context, e.message.toString());
+      showSnackBar(context, e.message.toString());
       _isLoading = false;
       notifyListeners();
     }
   }
 
-// Database Operations
+  // DATABASE OPERTAIONS
   Future<bool> checkExistingUser() async {
     DocumentSnapshot snapshot =
         await _firebaseFirestore.collection("users").doc(_uid).get();
@@ -114,7 +117,7 @@ class AuthProvider extends ChangeNotifier {
     required File profilePic,
     required Function onSuccess,
   }) async {
-    _isLoading = false;
+    _isLoading = true;
     notifyListeners();
     try {
       // uploading image to firebase storage.
@@ -138,7 +141,7 @@ class AuthProvider extends ChangeNotifier {
       });
     } on FirebaseAuthException catch (e) {
       // ignore: use_build_context_synchronously
-      showSnackbar(context, e.message.toString());
+      showSnackBar(context, e.message.toString());
       _isLoading = false;
       notifyListeners();
     }
@@ -170,7 +173,7 @@ class AuthProvider extends ChangeNotifier {
     });
   }
 
-  // storing data locally
+  // STORING DATA LOCALLY
   Future saveUserDataToSP() async {
     SharedPreferences s = await SharedPreferences.getInstance();
     await s.setString("user_model", jsonEncode(userModel.toMap()));

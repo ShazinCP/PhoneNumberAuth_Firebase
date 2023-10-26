@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:phonenumberauth/constants/sizedbox.dart';
 import 'package:phonenumberauth/controller/auth_provider.dart';
-import 'package:phonenumberauth/helper/colors.dart';
 import 'package:phonenumberauth/utils/utils.dart';
 import 'package:phonenumberauth/view/home/home_screen.dart';
 import 'package:phonenumberauth/view/user_information_screen.dart';
@@ -19,17 +17,17 @@ class OtpScreen extends StatefulWidget {
 
 class _OtpScreenState extends State<OtpScreen> {
   String? otpCode;
+
   @override
   Widget build(BuildContext context) {
     final isLoading =
         Provider.of<AuthProvider>(context, listen: true).isLoading;
-    final fullWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: SafeArea(
         child: isLoading == true
             ? const Center(
                 child: CircularProgressIndicator(
-                  color: cPurpleColor,
+                  color: Colors.purple,
                 ),
               )
             : Center(
@@ -48,14 +46,16 @@ class _OtpScreenState extends State<OtpScreen> {
                       Container(
                         width: 200,
                         height: 200,
-                        padding: const EdgeInsets.all(20),
+                        padding: const EdgeInsets.all(20.0),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: cPurpleColorShade50,
+                          color: Colors.purple.shade50,
                         ),
-                        child: Image.asset("assets/image2.png"),
+                        child: Image.asset(
+                          "assets/image2.png",
+                        ),
                       ),
-                      cHeight20,
+                      const SizedBox(height: 20),
                       const Text(
                         "Verification",
                         style: TextStyle(
@@ -63,40 +63,43 @@ class _OtpScreenState extends State<OtpScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      cHeight10,
+                      const SizedBox(height: 10),
                       const Text(
-                        "Enter the otp send to your phone number",
+                        "Enter the OTP send to your phone number",
                         style: TextStyle(
                           fontSize: 14,
-                          color: cBlackColor38,
+                          color: Colors.black38,
                           fontWeight: FontWeight.bold,
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      cHeight20,
+                      const SizedBox(height: 20),
                       Pinput(
                         length: 6,
                         showCursor: true,
                         defaultPinTheme: PinTheme(
-                            width: 60,
-                            height: 60,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: cPurpleColorShade200),
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: Colors.purple.shade200,
                             ),
-                            textStyle: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                            )),
+                          ),
+                          textStyle: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                         onCompleted: (value) {
                           setState(() {
                             otpCode = value;
                           });
                         },
                       ),
-                      cHeight25,
+                      const SizedBox(height: 25),
                       SizedBox(
-                        width: fullWidth,
+                        width: MediaQuery.of(context).size.width,
                         height: 50,
                         child: CustomButton(
                           text: "Verify",
@@ -104,27 +107,27 @@ class _OtpScreenState extends State<OtpScreen> {
                             if (otpCode != null) {
                               verifyOtp(context, otpCode!);
                             } else {
-                              showSnackbar(context, "Enter 6-Digit code");
+                              showSnackBar(context, "Enter 6-Digit code");
                             }
                           },
                         ),
                       ),
-                      cHeight20,
+                      const SizedBox(height: 20),
                       const Text(
                         "Didn't receive any code?",
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
-                          color: cBlackColor38,
+                          color: Colors.black38,
                         ),
                       ),
-                      cHeight15,
+                      const SizedBox(height: 15),
                       const Text(
                         "Resend New Code",
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: cPurpleColor,
+                          color: Colors.purple,
                         ),
                       ),
                     ],
@@ -148,23 +151,24 @@ class _OtpScreenState extends State<OtpScreen> {
           (value) async {
             if (value == true) {
               // user exists in our app
-              ap.getDataFromFirestore().then((value) => ap
-                  .saveUserDataToSP()
-                  .then((value) => ap
-                      .setSignIn()
-                      .then((value) => Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const HomeScreen(),
-                          ),
-                          (route) => false))));
+              ap.getDataFromFirestore().then(
+                    (value) => ap.saveUserDataToSP().then(
+                          (value) => ap.setSignIn().then(
+                                (value) => Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const HomeScreen(),
+                                    ),
+                                    (route) => false),
+                              ),
+                        ),
+                  );
             } else {
               // new user
               Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const UserInformationScreen(),
-                  ),
+                      builder: (context) => const UserInformationScreen()),
                   (route) => false);
             }
           },
