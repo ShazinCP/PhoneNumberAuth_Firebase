@@ -1,28 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:phonenumberauth/constants/sizedbox.dart';
 import 'package:phonenumberauth/controller/auth_provider.dart';
 import 'package:phonenumberauth/view/intro/welcome_screen.dart';
 import 'package:provider/provider.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  @override
   Widget build(BuildContext context) {
-    final ap = Provider.of<AuthProvider>(context, listen: false);
+    final data = Provider.of<AuthProvider>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.purple,
-        title: const Text("FlutterPhone Auth"),
+        title: const Text("PhoneNumber Auth"),
         actions: [
           IconButton(
             onPressed: () {
-              ap.userSignOut().then(
+              data.userSignOut().then(
                     (value) => Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -42,14 +38,14 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           CircleAvatar(
             backgroundColor: Colors.purple,
-            backgroundImage: NetworkImage(ap.userModel.profilePic),
+            backgroundImage: NetworkImage(data.userModel.profilePic),
             radius: 50,
           ),
-          const SizedBox(height: 20),
-          Text(ap.userModel.name),
-          Text(ap.userModel.phoneNumber),
-          Text(ap.userModel.email),
-          Text(ap.userModel.bio),
+          cHeight20,
+          Text(data.userModel.name),
+          Text(data.userModel.phoneNumber),
+          Text(data.userModel.email),
+          Text(data.userModel.bio),
         ],
       )),
     );

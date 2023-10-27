@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:phonenumberauth/controller/auth_provider.dart';
+import 'package:phonenumberauth/controller/phonenumber_provider.dart';
 import 'package:phonenumberauth/view/intro/welcome_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -19,7 +20,10 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (context) => AuthProvider(),
-        )
+        ),
+         ChangeNotifierProvider(
+          create: (context) => PhoneProvider(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

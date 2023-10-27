@@ -83,7 +83,7 @@ class _UserInformationScreenState extends State<UserInformationScreen> {
                           children: [
                             // name field
                             textField(
-                              hintText: "John Smith",
+                              hintText: "Enter name",
                               icon: Icons.account_circle,
                               inputType: TextInputType.name,
                               maxLines: 1,
@@ -92,7 +92,7 @@ class _UserInformationScreenState extends State<UserInformationScreen> {
 
                             // email
                             textField(
-                              hintText: "abc@gmail.com",
+                              hintText: "Enter your email",
                               icon: Icons.email,
                               inputType: TextInputType.emailAddress,
                               maxLines: 1,
@@ -129,7 +129,7 @@ class _UserInformationScreenState extends State<UserInformationScreen> {
 
 // store user data to database
   void storeData() {
-    final ap = Provider.of<AuthProvider>(context, listen: false);
+    final data = Provider.of<AuthProvider>(context, listen: false);
     UserModel userModel = UserModel(
       name: nameController.text.trim(),
       email: emailController.text.trim(),
@@ -140,12 +140,12 @@ class _UserInformationScreenState extends State<UserInformationScreen> {
       uid: "",
     );
     if (image != null) {
-      ap.saveUserDataToFirebase(
+      data.saveUserDataToFirebase(
         context: context,
         userModel: userModel,
         profilePic: image!,
         onSuccess: () {
-          ap.saveUserDataToSP().then((value) => ap.setSignIn().then(
+          data.saveUserDataToSP().then((value) => data.setSignIn().then(
                 (value) => Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(

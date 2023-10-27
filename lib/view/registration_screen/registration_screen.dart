@@ -1,34 +1,19 @@
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:phonenumberauth/constants/sizedbox.dart';
 import 'package:phonenumberauth/controller/auth_provider.dart';
+import 'package:phonenumberauth/controller/phonenumber_provider.dart';
 import 'package:phonenumberauth/widget/custom_button.dart';
 import 'package:provider/provider.dart';
 
-class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+class RegisterScreen extends StatelessWidget {
+  RegisterScreen({super.key});
 
-  @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
-}
-
-class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController phoneController = TextEditingController();
-
-  Country selectedCountry = Country(
-    phoneCode: "91",
-    countryCode: "IN",
-    e164Sc: 0,
-    geographic: true,
-    level: 1,
-    name: "India",
-    example: "India",
-    displayName: "India",
-    displayNameNoCountryCode: "IN",
-    e164Key: "",
-  );
 
   @override
   Widget build(BuildContext context) {
+    final data = Provider.of<PhoneProvider>(context);
     phoneController.selection = TextSelection.fromPosition(
       TextPosition(
         offset: phoneController.text.length,
@@ -54,7 +39,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       "assets/image2.png",
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  cHeight20,
                   const Text(
                     "Register",
                     style: TextStyle(
@@ -62,7 +47,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  cHeight10,
                   const Text(
                     "Add your phone number. We'll send you a verification code",
                     style: TextStyle(
@@ -72,7 +57,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 20),
+                 cHeight20,
                   TextFormField(
                     cursorColor: Colors.purple,
                     controller: phoneController,
@@ -82,9 +67,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                     onChanged: (value) {
-                      setState(() {
-                        phoneController.text = value;
-                      });
+                      // setState(() {
+                      //   phoneController.text = value;
+                      // });
+                      data.setPhone(value);
                     },
                     decoration: InputDecoration(
                       hintText: "Enter phone number",
@@ -111,15 +97,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   bottomSheetHeight: 550,
                                 ),
                                 onSelect: (value) {
-                                  setState(() {
-                                    selectedCountry = value;
-                                  });
+                                  // setState(() {
+                                  //   selectedCountry = value;
+                                  // });
+                                  data.setSelectedCountry(value);
                                 });
                           },
                           child: Padding(
                             padding: const EdgeInsets.only(top: 3),
                             child: Text(
-                              "${selectedCountry.flagEmoji} + ${selectedCountry.phoneCode}",
+                              "${data.selectedCountry.flagEmoji} + ${data.selectedCountry.phoneCode}",
                               style: const TextStyle(
                                 fontSize: 18,
                                 color: Colors.black,
@@ -147,12 +134,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           : null,
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  cHeight20,
                   SizedBox(
                     width: double.infinity,
                     height: 50,
                     child: CustomButton(
-                        text: "Login", onpressed: () => sendPhoneNumber()),
+                      text: "Login",
+                      onpressed: () => sendPhoneNumber(context),
+                    ),
                   ),
                 ],
               ),
@@ -163,9 +152,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  void sendPhoneNumber() {
-    final ap = Provider.of<AuthProvider>(context, listen: false);
+  void sendPhoneNumber(BuildContext context) {
+    final value = Provider.of<AuthProvider>(context, listen: false);
+    final data = Provider.of<PhoneProvider>(context, listen: false);
     String phoneNumber = phoneController.text.trim();
-    ap.signInWithPhone(context, "+${selectedCountry.phoneCode}$phoneNumber");
+    value.signInWithPhone(
+        context, "+${data.selectedCountry.phoneCode}$phoneNumber");
   }
 }

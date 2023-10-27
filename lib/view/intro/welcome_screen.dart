@@ -12,7 +12,7 @@ class WelcomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ap = Provider.of<AuthProvider>(context, listen: false);
+    final data = Provider.of<AuthProvider>(context, listen: false);
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -48,8 +48,8 @@ class WelcomeScreen extends StatelessWidget {
                   child: CustomButton(
                     text: "Get Started",
                     onpressed: () async {
-                      if (ap.isSignedIn == true) {
-                        await ap.getDataFromSP().whenComplete(
+                      if (data.isSignedIn == true) {
+                        await data.getDataFromSP().whenComplete(
                               () => Navigator.pushReplacement(
                                  context,
                                 MaterialPageRoute(
@@ -61,7 +61,7 @@ class WelcomeScreen extends StatelessWidget {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const RegisterScreen(),
+                            builder: (context) => RegisterScreen(),
                           ),
                         );
                       }

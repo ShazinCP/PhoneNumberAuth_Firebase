@@ -29,19 +29,19 @@ class AuthProvider extends ChangeNotifier {
   }
 
   void checkSign() async {
-    final SharedPreferences s = await SharedPreferences.getInstance();
-    _isSignedIn = s.getBool("is_signedin") ?? false;
+    final SharedPreferences sharedpref = await SharedPreferences.getInstance();
+    _isSignedIn = sharedpref.getBool("is_signedin") ?? false;
     notifyListeners();
   }
 
   Future setSignIn() async {
-    final SharedPreferences s = await SharedPreferences.getInstance();
-    s.setBool("is_signedin", true);
+    final SharedPreferences sharedpref = await SharedPreferences.getInstance();
+    sharedpref.setBool("is_signedin", true);
     _isSignedIn = true;
     notifyListeners();
   }
 
-  // Signin
+  // SIGNIN
   void signInWithPhone(BuildContext context, String phoneNumber) async {
     try {
       await _firebaseAuth.verifyPhoneNumber(
@@ -67,7 +67,7 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  // verify otp
+  // VERIFY OTP
   void verifyOtp({
     required BuildContext context,
     required String verificationId,
@@ -84,7 +84,6 @@ class AuthProvider extends ChangeNotifier {
       User? user = (await _firebaseAuth.signInWithCredential(creds)).user;
 
       if (user != null) {
-        // carry our logic
         _uid = user.uid;
         onSuccess();
       }
@@ -98,15 +97,15 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  // DATABASE OPERTAIONS
+  // DATABASE OPERATIONS
   Future<bool> checkExistingUser() async {
     DocumentSnapshot snapshot =
         await _firebaseFirestore.collection("users").doc(_uid).get();
     if (snapshot.exists) {
-      print("USER EXISTS");
+      debugPrint("USER EXISTS");
       return true;
     } else {
-      print("NEW USER");
+      debugPrint("NEW USER");
       return false;
     }
   }
@@ -120,7 +119,7 @@ class AuthProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     try {
-      // uploading image to firebase storage.
+      // UPLOADING IMAGE TO FIREBASE STORAGE.
       await storeFileToStorage("profilePic/$_uid", profilePic).then((value) {
         userModel.profilePic = value;
         userModel.createdAt = DateTime.now().millisecondsSinceEpoch.toString();
@@ -129,7 +128,7 @@ class AuthProvider extends ChangeNotifier {
       });
       _userModel = userModel;
 
-      // uploading to database
+      // UPLOADING TO DATABASE
       await _firebaseFirestore
           .collection("users")
           .doc(_uid)
@@ -175,23 +174,24 @@ class AuthProvider extends ChangeNotifier {
 
   // STORING DATA LOCALLY
   Future saveUserDataToSP() async {
-    SharedPreferences s = await SharedPreferences.getInstance();
-    await s.setString("user_model", jsonEncode(userModel.toMap()));
+    SharedPreferences sharedpref = await SharedPreferences.getInstance();
+    await sharedpref.setString("user_model", jsonEncode(userModel.toMap()));
   }
 
   Future getDataFromSP() async {
-    SharedPreferences s = await SharedPreferences.getInstance();
-    String data = s.getString("user_model") ?? '';
+    SharedPreferences sharedpref = await SharedPreferences.getInstance();
+    String data = sharedpref.getString("user_model") ?? '';
     _userModel = UserModel.fromMap(jsonDecode(data));
     _uid = _userModel!.uid;
     notifyListeners();
   }
 
+// SIGNOUT
   Future userSignOut() async {
-    SharedPreferences s = await SharedPreferences.getInstance();
+    SharedPreferences sharedpref = await SharedPreferences.getInstance();
     await _firebaseAuth.signOut();
     _isSignedIn = false;
     notifyListeners();
-    s.clear();
+    sharedpref.clear();
   }
 }
