@@ -3,9 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:phonenumberauth/constants/sizedbox.dart';
 import 'package:phonenumberauth/controller/auth_provider.dart';
+import 'package:phonenumberauth/controller/internet_connectivity_provider.dart';
 import 'package:phonenumberauth/helper/colors.dart';
 import 'package:phonenumberauth/model/user_model.dart';
-import 'package:phonenumberauth/utils/utils.dart';
+import 'package:phonenumberauth/widget/snackbar.dart';
 import 'package:phonenumberauth/view/home/home_screen.dart';
 import 'package:phonenumberauth/widget/custom_button.dart';
 import 'package:phonenumberauth/widget/textfield.dart';
@@ -40,6 +41,8 @@ class _UserInformationScreenState extends State<UserInformationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<InternetConnectivityProvider>(context, listen: false)
+        .getInternetConnectivity(context);
     final fullWidth = MediaQuery.of(context).size.width;
     final isLoading =
         Provider.of<AuthProvider>(context, listen: true).isLoading;

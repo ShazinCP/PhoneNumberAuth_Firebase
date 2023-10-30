@@ -6,8 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:phonenumberauth/model/user_model.dart';
-import 'package:phonenumberauth/utils/utils.dart';
-import 'package:phonenumberauth/view/otp_screen/otp_screen.dart';
+import 'package:phonenumberauth/services/auth_services.dart';
+import 'package:phonenumberauth/widget/snackbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthProvider extends ChangeNotifier {
@@ -19,6 +19,8 @@ class AuthProvider extends ChangeNotifier {
   String get uid => _uid!;
   UserModel? _userModel;
   UserModel get userModel => _userModel!;
+
+   AuthServices authServices = AuthServices();
 
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
@@ -41,31 +43,10 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // SIGNIN
-  void signInWithPhone(BuildContext context, String phoneNumber) async {
-    try {
-      await _firebaseAuth.verifyPhoneNumber(
-          phoneNumber: phoneNumber,
-          verificationCompleted:
-              (PhoneAuthCredential phoneAuthCredential) async {
-            await _firebaseAuth.signInWithCredential(phoneAuthCredential);
-          },
-          verificationFailed: (error) {
-            throw Exception(error.message);
-          },
-          codeSent: (verificationId, forceResendingToken) {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => OtpScreen(verificationId: verificationId),
-              ),
-            );
-          },
-          codeAutoRetrievalTimeout: (verificationId) {});
-    } on FirebaseAuthException catch (e) {
-      // ignore: use_build_context_synchronously
-      showSnackBar(context, e.message.toString());
+    // SIGNIN 
+    Future signInPhone(BuildContext context, String phoneNumber) async{
+      return authServices.signInWithPhone(context, phoneNumber);
     }
-  }
 
   // VERIFY OTP
   void verifyOtp({
@@ -102,10 +83,10 @@ class AuthProvider extends ChangeNotifier {
     DocumentSnapshot snapshot =
         await _firebaseFirestore.collection("users").doc(_uid).get();
     if (snapshot.exists) {
-      debugPrint("USER EXISTS");
+      debugPrint("User Exists");
       return true;
     } else {
-      debugPrint("NEW USER");
+      debugPrint("New User");
       return false;
     }
   }

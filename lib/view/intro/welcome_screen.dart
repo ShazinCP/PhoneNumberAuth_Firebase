@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:phonenumberauth/constants/sizedbox.dart';
 import 'package:phonenumberauth/controller/auth_provider.dart';
+import 'package:phonenumberauth/controller/internet_connectivity_provider.dart';
 import 'package:phonenumberauth/helper/colors.dart';
 import 'package:phonenumberauth/view/home/home_screen.dart';
 import 'package:phonenumberauth/view/registration_screen/registration_screen.dart';
@@ -12,6 +13,8 @@ class WelcomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<InternetConnectivityProvider>(context, listen: false)
+        .getInternetConnectivity(context);
     final data = Provider.of<AuthProvider>(context, listen: false);
     return Scaffold(
       body: SafeArea(
@@ -51,7 +54,7 @@ class WelcomeScreen extends StatelessWidget {
                       if (data.isSignedIn == true) {
                         await data.getDataFromSP().whenComplete(
                               () => Navigator.pushReplacement(
-                                 context,
+                                context,
                                 MaterialPageRoute(
                                   builder: (context) => const HomeScreen(),
                                 ),
@@ -61,7 +64,7 @@ class WelcomeScreen extends StatelessWidget {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => RegisterScreen(),
+                            builder: (context) => const RegisterScreen(),
                           ),
                         );
                       }

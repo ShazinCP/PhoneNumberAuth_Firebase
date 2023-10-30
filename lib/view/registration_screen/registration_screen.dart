@@ -1,22 +1,28 @@
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:phonenumberauth/constants/border_radius.dart';
 import 'package:phonenumberauth/constants/sizedbox.dart';
 import 'package:phonenumberauth/controller/auth_provider.dart';
+import 'package:phonenumberauth/controller/google_auth_provider.dart';
+import 'package:phonenumberauth/controller/internet_connectivity_provider.dart';
 import 'package:phonenumberauth/controller/phonenumber_provider.dart';
+import 'package:phonenumberauth/helper/colors.dart';
 import 'package:phonenumberauth/widget/custom_button.dart';
 import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatelessWidget {
-  RegisterScreen({super.key});
+  const RegisterScreen({super.key});
 
-  final TextEditingController phoneController = TextEditingController();
-
+  
   @override
   Widget build(BuildContext context) {
-    final data = Provider.of<PhoneProvider>(context);
-    phoneController.selection = TextSelection.fromPosition(
+    Provider.of<InternetConnectivityProvider>(context, listen: false)
+        .getInternetConnectivity(context);
+    final data = Provider.of<PhoneProvider>(context, listen: false);
+    final value = Provider.of<GoogleAuthProvider>(context, listen: false);
+   data.phoneController.selection = TextSelection.fromPosition(
       TextPosition(
-        offset: phoneController.text.length,
+        offset: data.phoneController.text.length,
       ),
     );
     return Scaffold(
@@ -33,7 +39,7 @@ class RegisterScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(20.0),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.purple.shade50,
+                      color: cPurpleColorShade50,
                     ),
                     child: Image.asset(
                       "assets/image2.png",
@@ -52,15 +58,15 @@ class RegisterScreen extends StatelessWidget {
                     "Add your phone number. We'll send you a verification code",
                     style: TextStyle(
                       fontSize: 14,
-                      color: Colors.black38,
+                      color: cBlackColor38,
                       fontWeight: FontWeight.bold,
                     ),
                     textAlign: TextAlign.center,
                   ),
-                 cHeight20,
+                  cHeight20,
                   TextFormField(
-                    cursorColor: Colors.purple,
-                    controller: phoneController,
+                    cursorColor: cPurpleColor,
+                    controller: data.phoneController,
                     keyboardType: TextInputType.phone,
                     style: const TextStyle(
                       fontSize: 18,
@@ -77,15 +83,15 @@ class RegisterScreen extends StatelessWidget {
                       hintStyle: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 15,
-                        color: Colors.grey.shade600,
+                        color: cGreyColorShade600,
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Colors.black12),
+                        borderSide: const BorderSide(color: cBlackColor12),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Colors.black12),
+                        borderSide: const BorderSide(color: cBlackColor12),
                       ),
                       prefixIcon: Container(
                         padding: const EdgeInsets.all(8.0),
@@ -109,25 +115,25 @@ class RegisterScreen extends StatelessWidget {
                               "${data.selectedCountry.flagEmoji} + ${data.selectedCountry.phoneCode}",
                               style: const TextStyle(
                                 fontSize: 18,
-                                color: Colors.black,
+                                color: cBlackColor,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
                         ),
                       ),
-                      suffixIcon: phoneController.text.length > 9
+                      suffixIcon: data.phoneController.text.length > 9
                           ? Container(
                               height: 30,
                               width: 30,
                               margin: const EdgeInsets.all(10.0),
                               decoration: const BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: Colors.green,
+                                color: cGreenColor,
                               ),
                               child: const Icon(
                                 Icons.done,
-                                color: Colors.white,
+                                color: cWhiteColor,
                                 size: 20,
                               ),
                             )
@@ -143,6 +149,61 @@ class RegisterScreen extends StatelessWidget {
                       onpressed: () => sendPhoneNumber(context),
                     ),
                   ),
+                  cHeight60,
+                  Row(
+                    children: [
+                      Expanded(
+                        child:
+                            Divider(thickness: 0.5, color: cGreyColorShade400),
+                      ),
+                      cWidth15,
+                      const Text('Or'),
+                      cWidth15,
+                      cHeight10,
+                      Expanded(
+                        child:
+                            Divider(thickness: 0.5, color: cGreyColorShade400),
+                      ),
+                    ],
+                  ),
+                  cHeight60,
+                  GestureDetector(
+                    onTap: () {
+                      value.signInWithGoogle();
+                    },
+                    child: Container(
+                      height: 60,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: cRadius10,
+                        color: cBlueColorShade,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            "assets/google_icon.png",
+                          ),
+                          const Text("Sign in with Google")
+                        ],
+                      ),
+                    ),
+                  ),
+                  cHeight80,
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Don't have an account?"),
+                      Text(
+                        "Signup",
+                        style: TextStyle(
+                          color: cBlueColor,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                    ],
+                  )
                 ],
               ),
             ),
@@ -155,8 +216,8 @@ class RegisterScreen extends StatelessWidget {
   void sendPhoneNumber(BuildContext context) {
     final value = Provider.of<AuthProvider>(context, listen: false);
     final data = Provider.of<PhoneProvider>(context, listen: false);
-    String phoneNumber = phoneController.text.trim();
-    value.signInWithPhone(
+    String phoneNumber = data.phoneController.text.trim();
+    value.signInPhone(
         context, "+${data.selectedCountry.phoneCode}$phoneNumber");
   }
 }

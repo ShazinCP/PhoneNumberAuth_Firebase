@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:phonenumberauth/constants/sizedbox.dart';
 import 'package:phonenumberauth/controller/auth_provider.dart';
+import 'package:phonenumberauth/controller/internet_connectivity_provider.dart';
 import 'package:phonenumberauth/controller/phonenumber_provider.dart';
-import 'package:phonenumberauth/utils/utils.dart';
+import 'package:phonenumberauth/helper/colors.dart';
+import 'package:phonenumberauth/widget/snackbar.dart';
 import 'package:phonenumberauth/view/home/home_screen.dart';
 import 'package:phonenumberauth/view/user_information/user_information_screen.dart';
 import 'package:phonenumberauth/widget/custom_button.dart';
@@ -22,6 +24,8 @@ class _OtpScreenState extends State<OtpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<InternetConnectivityProvider>(context, listen: false)
+        .getInternetConnectivity(context);
     final isLoading =
         Provider.of<AuthProvider>(context, listen: true).isLoading;
     return Scaffold(
@@ -29,13 +33,13 @@ class _OtpScreenState extends State<OtpScreen> {
         child: isLoading == true
             ? const Center(
                 child: CircularProgressIndicator(
-                  color: Colors.purple,
+                  color: cPurpleColor,
                 ),
               )
             : Consumer<PhoneProvider>(
                 builder: (context, value, child) {
-                 return SingleChildScrollView(
-                   child: Center(
+                  return SingleChildScrollView(
+                    child: Center(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: 25, horizontal: 30),
@@ -54,7 +58,7 @@ class _OtpScreenState extends State<OtpScreen> {
                               padding: const EdgeInsets.all(20.0),
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: Colors.purple.shade50,
+                                color: cPurpleColorShade50,
                               ),
                               child: Image.asset(
                                 "assets/image2.png",
@@ -73,7 +77,7 @@ class _OtpScreenState extends State<OtpScreen> {
                               "Enter the OTP send to your phone number",
                               style: TextStyle(
                                 fontSize: 14,
-                                color: Colors.black38,
+                                color: cBlackColor38,
                                 fontWeight: FontWeight.bold,
                               ),
                               textAlign: TextAlign.center,
@@ -88,7 +92,7 @@ class _OtpScreenState extends State<OtpScreen> {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(
-                                    color: Colors.purple.shade200,
+                                    color: cPurpleColorShade200,
                                   ),
                                 ),
                                 textStyle: const TextStyle(
@@ -123,7 +127,7 @@ class _OtpScreenState extends State<OtpScreen> {
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black38,
+                                color: cBlackColor38,
                               ),
                             ),
                             cHeight15,
@@ -132,14 +136,14 @@ class _OtpScreenState extends State<OtpScreen> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.purple,
+                                color: cPurpleColor,
                               ),
                             ),
                           ],
                         ),
                       ),
                     ),
-                 );
+                  );
                 },
               ),
       ),

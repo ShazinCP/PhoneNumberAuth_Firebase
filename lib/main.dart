@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:phonenumberauth/controller/auth_provider.dart';
+import 'package:phonenumberauth/controller/google_auth_provider.dart';
+import 'package:phonenumberauth/controller/internet_connectivity_provider.dart';
 import 'package:phonenumberauth/controller/phonenumber_provider.dart';
 import 'package:phonenumberauth/view/intro/welcome_screen.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +25,12 @@ class MyApp extends StatelessWidget {
         ),
          ChangeNotifierProvider(
           create: (context) => PhoneProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => GoogleAuthProvider(),
+        ),
+         ChangeNotifierProvider(
+          create: (context) => InternetConnectivityProvider(),
         ),
       ],
       child: MaterialApp(
