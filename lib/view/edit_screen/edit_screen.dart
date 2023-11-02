@@ -13,14 +13,14 @@ import 'package:phonenumberauth/widget/custom_button.dart';
 import 'package:phonenumberauth/widget/textfield.dart';
 import 'package:provider/provider.dart';
 
-class UserInformationScreen extends StatefulWidget {
-  const UserInformationScreen({super.key});
+class EditScreen extends StatefulWidget {
+  const EditScreen({super.key});
 
   @override
-  State<UserInformationScreen> createState() => _UserInformationScreenState();
+  State<EditScreen> createState() => _EditScreenState();
 }
 
-class _UserInformationScreenState extends State<UserInformationScreen> {
+class _EditScreenState extends State<EditScreen> {
   File? image;
 
   @override
@@ -45,9 +45,15 @@ class _UserInformationScreenState extends State<UserInformationScreen> {
     final fullWidth = MediaQuery.of(context).size.width;
     final isLoading =
         Provider.of<AuthProvider>(context, listen: true).isLoading;
+    final value = Provider.of<PhoneProvider>(context,listen: false);
+    final args = ModalRoute.of(context)!.settings.arguments as Map;
+    value.nameController.text = args['name'];
+    value.emailController.text = args['email'];
+    value.bioController.text = args['bio'];
+    // value.
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add User"),
+        title: const Text("Edit User"),
         centerTitle: true,
       ),
       body: SafeArea(
@@ -125,7 +131,7 @@ class _UserInformationScreenState extends State<UserInformationScreen> {
                         height: 50,
                         width: fullWidth * 0.90,
                         child: CustomButton(
-                          text: "Continue",
+                          text: "Update",
                           onpressed: () => storeData(),
                         ),
                       ),
@@ -160,7 +166,7 @@ class _UserInformationScreenState extends State<UserInformationScreen> {
                 (value) => Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>  const HomeScreen(),
+                      builder: (context) =>  HomeScreen(),
                     ),
                     (route) => false),
               ));

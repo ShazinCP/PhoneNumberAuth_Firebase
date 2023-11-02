@@ -2,21 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:phonenumberauth/constants/sizedbox.dart';
 import 'package:phonenumberauth/controller/auth_provider.dart';
 import 'package:phonenumberauth/controller/internet_connectivity_provider.dart';
+import 'package:phonenumberauth/helper/colors.dart';
 import 'package:phonenumberauth/view/intro/welcome_screen.dart';
+import 'package:phonenumberauth/widget/uppercase.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-     Provider.of<InternetConnectivityProvider>(context, listen: false)
-                  .getInternetConnectivity(context);
+    Provider.of<InternetConnectivityProvider>(context, listen: false)
+        .getInternetConnectivity(context);
     final data = Provider.of<AuthProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.purple,
-        title: const Text("PhoneNumber Auth"),
+        backgroundColor: cPurpleColor,
+        title: const Text("PhoneNumber Auth",style: TextStyle(color: cWhiteColor),),
         actions: [
           IconButton(
             onPressed: () {
@@ -35,19 +37,48 @@ class HomeScreen extends StatelessWidget {
       ),
       body: Center(
           child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          cHeight10,
+          SizedBox(
+            height: 60,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                IconButton(
+                    onPressed: () {
+                 Navigator.pushNamed(context, '/EditScreen',
+                                  arguments: {
+                                    'name': data.userModel.name,
+                                    'email': data.userModel.email,
+                                    'bio': data.userModel.bio,
+                                    'phoneNumber': data.userModel.phoneNumber,
+                                    'createdAt': data.userModel.createdAt,
+                                    'uid': data.userModel.uid
+                                  });
+                    },
+                    icon: const Icon(
+                      Icons.edit,
+                      color: cBlueColor,
+                      size: 30,
+                    )),
+                cWidth10
+              ],
+            ),
+          ),
           CircleAvatar(
-            backgroundColor: Colors.purple,
+            backgroundColor: cPurpleColor,
             backgroundImage: NetworkImage(data.userModel.profilePic),
             radius: 50,
           ),
           cHeight20,
-          Text(data.userModel.name),
+          Text(
+            data.userModel.name.capitalize(),
+            style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w500),
+          ),
           Text(data.userModel.phoneNumber),
           Text(data.userModel.email),
-          Text(data.userModel.bio),
+          Text(data.userModel.bio.capitalize()),
         ],
       )),
     );

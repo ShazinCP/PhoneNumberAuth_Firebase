@@ -1,10 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:phonenumberauth/controller/auth_provider.dart';
-import 'package:phonenumberauth/controller/google_auth_provider.dart';
 import 'package:phonenumberauth/controller/internet_connectivity_provider.dart';
 import 'package:phonenumberauth/controller/phonenumber_provider.dart';
+import 'package:phonenumberauth/view/edit_screen/edit_screen.dart';
+import 'package:phonenumberauth/view/home/home_screen.dart';
 import 'package:phonenumberauth/view/intro/welcome_screen.dart';
+import 'package:phonenumberauth/view/user_information/user_information_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -26,14 +28,19 @@ class MyApp extends StatelessWidget {
          ChangeNotifierProvider(
           create: (context) => PhoneProvider(),
         ),
-        ChangeNotifierProvider(
-          create: (context) => GoogleAuthProvider(),
-        ),
+        // ChangeNotifierProvider(
+        //   create: (context) => GoogleAuthProvider(),
+        // ),
          ChangeNotifierProvider(
           create: (context) => InternetConnectivityProvider(),
         ),
       ],
       child: MaterialApp(
+         routes: {
+            '/HomeScreen': (context) =>  const HomeScreen(),
+            "/UserInformationScreen": (context) => const UserInformationScreen(),
+            '/EditScreen': (context) => const EditScreen()
+          },
         debugShowCheckedModeBanner: false,
         title: 'PhoneNumberAuth',
         theme: ThemeData(

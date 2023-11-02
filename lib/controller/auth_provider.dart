@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:phonenumberauth/model/user_model.dart';
-import 'package:phonenumberauth/services/auth_services.dart';
+import 'package:phonenumberauth/view/otp_screen/otp_screen.dart';
 import 'package:phonenumberauth/widget/snackbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,8 +20,6 @@ class AuthProvider extends ChangeNotifier {
   UserModel? _userModel;
   UserModel get userModel => _userModel!;
 
-   AuthServices authServices = AuthServices();
-
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
   final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
@@ -31,24 +29,46 @@ class AuthProvider extends ChangeNotifier {
   }
 
   void checkSign() async {
-    final SharedPreferences sharedpref = await SharedPreferences.getInstance();
-    _isSignedIn = sharedpref.getBool("is_signedin") ?? false;
+    final SharedPreferences s = await SharedPreferences.getInstance();
+    _isSignedIn = s.getBool("is_signedin") ?? false;
     notifyListeners();
   }
 
   Future setSignIn() async {
-    final SharedPreferences sharedpref = await SharedPreferences.getInstance();
-    sharedpref.setBool("is_signedin", true);
+    final SharedPreferences s = await SharedPreferences.getInstance();
+    s.setBool("is_signedin", true);
     _isSignedIn = true;
     notifyListeners();
   }
 
-    // SIGNIN 
-    Future signInPhone(BuildContext context, String phoneNumber) async{
-      return authServices.signInWithPhone(context, phoneNumber);
+  // signin
+  void signInWithPhone(BuildContext context, String phoneNumber) async {
+    try {
+      await _firebaseAuth.verifyPhoneNumber(
+          phoneNumber: phoneNumber,
+          verificationCompleted:
+              (PhoneAuthCredential phoneAuthCredential) async {
+            await _firebaseAuth.signInWithCredential(phoneAuthCredential);
+          },
+          verificationFailed: (error) {
+            throw Exception(error.message);
+          },
+          codeSent: (verificationId, forceResendingToken) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => OtpScreen(verificationId: verificationId),
+              ),
+            );
+          },
+          codeAutoRetrievalTimeout: (verificationId) {});
+    } on FirebaseAuthException catch (e) {
+      // ignore: use_build_context_synchronously
+      showSnackBar(context, e.message.toString());
     }
+  }
 
-  // VERIFY OTP
+  // verify otp
   void verifyOtp({
     required BuildContext context,
     required String verificationId,
@@ -65,6 +85,7 @@ class AuthProvider extends ChangeNotifier {
       User? user = (await _firebaseAuth.signInWithCredential(creds)).user;
 
       if (user != null) {
+        // carry our logic
         _uid = user.uid;
         onSuccess();
       }
@@ -78,15 +99,15 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  // DATABASE OPERATIONS
+  // DATABASE OPERTAIONS
   Future<bool> checkExistingUser() async {
     DocumentSnapshot snapshot =
         await _firebaseFirestore.collection("users").doc(_uid).get();
     if (snapshot.exists) {
-      debugPrint("User Exists");
+      print("USER EXISTS");
       return true;
     } else {
-      debugPrint("New User");
+      print("NEW USER");
       return false;
     }
   }
@@ -100,7 +121,7 @@ class AuthProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     try {
-      // UPLOADING IMAGE TO FIREBASE STORAGE.
+      // uploading image to firebase storage.
       await storeFileToStorage("profilePic/$_uid", profilePic).then((value) {
         userModel.profilePic = value;
         userModel.createdAt = DateTime.now().millisecondsSinceEpoch.toString();
@@ -109,7 +130,7 @@ class AuthProvider extends ChangeNotifier {
       });
       _userModel = userModel;
 
-      // UPLOADING TO DATABASE
+      // uploading to database
       await _firebaseFirestore
           .collection("users")
           .doc(_uid)
@@ -155,24 +176,23 @@ class AuthProvider extends ChangeNotifier {
 
   // STORING DATA LOCALLY
   Future saveUserDataToSP() async {
-    SharedPreferences sharedpref = await SharedPreferences.getInstance();
-    await sharedpref.setString("user_model", jsonEncode(userModel.toMap()));
+    SharedPreferences s = await SharedPreferences.getInstance();
+    await s.setString("user_model", jsonEncode(userModel.toMap()));
   }
 
   Future getDataFromSP() async {
-    SharedPreferences sharedpref = await SharedPreferences.getInstance();
-    String data = sharedpref.getString("user_model") ?? '';
+    SharedPreferences s = await SharedPreferences.getInstance();
+    String data = s.getString("user_model") ?? '';
     _userModel = UserModel.fromMap(jsonDecode(data));
     _uid = _userModel!.uid;
     notifyListeners();
   }
 
-// SIGNOUT
   Future userSignOut() async {
-    SharedPreferences sharedpref = await SharedPreferences.getInstance();
+    SharedPreferences s = await SharedPreferences.getInstance();
     await _firebaseAuth.signOut();
     _isSignedIn = false;
     notifyListeners();
-    sharedpref.clear();
+    s.clear();
   }
 }
