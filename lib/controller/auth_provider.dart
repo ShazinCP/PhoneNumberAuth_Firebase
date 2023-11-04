@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:phonenumberauth/model/user_model.dart';
-import 'package:phonenumberauth/view/otp_screen/otp_screen.dart';
+import 'package:phonenumberauth/view/otp_screen.dart';
 import 'package:phonenumberauth/widget/snackbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

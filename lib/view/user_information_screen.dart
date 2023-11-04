@@ -8,7 +8,7 @@ import 'package:phonenumberauth/controller/phonenumber_provider.dart';
 import 'package:phonenumberauth/helper/colors.dart';
 import 'package:phonenumberauth/model/user_model.dart';
 import 'package:phonenumberauth/widget/snackbar.dart';
-import 'package:phonenumberauth/view/home/home_screen.dart';
+import 'package:phonenumberauth/view/home_screen.dart';
 import 'package:phonenumberauth/widget/custom_button.dart';
 import 'package:phonenumberauth/widget/textfield.dart';
 import 'package:provider/provider.dart';

@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:phonenumberauth/controller/auth_provider.dart';
 import 'package:phonenumberauth/controller/internet_connectivity_provider.dart';
 import 'package:phonenumberauth/controller/phonenumber_provider.dart';
-import 'package:phonenumberauth/view/edit_screen/edit_screen.dart';
-import 'package:phonenumberauth/view/home/home_screen.dart';
-import 'package:phonenumberauth/view/intro/welcome_screen.dart';
-import 'package:phonenumberauth/view/user_information/user_information_screen.dart';
+import 'package:phonenumberauth/view/edit_screen.dart';
+import 'package:phonenumberauth/view/home_screen.dart';
+import 'package:phonenumberauth/view/welcome_screen.dart';
+import 'package:phonenumberauth/view/user_information_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() async {

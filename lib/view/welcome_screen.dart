@@ -3,8 +3,8 @@ import 'package:phonenumberauth/constants/sizedbox.dart';
 import 'package:phonenumberauth/controller/auth_provider.dart';
 import 'package:phonenumberauth/controller/internet_connectivity_provider.dart';
 import 'package:phonenumberauth/helper/colors.dart';
-import 'package:phonenumberauth/view/home/home_screen.dart';
-import 'package:phonenumberauth/view/registration_screen/registration_screen.dart';
+import 'package:phonenumberauth/view/home_screen.dart';
+import 'package:phonenumberauth/view/registration_screen.dart';
 import 'package:phonenumberauth/widget/custom_button.dart';
 import 'package:provider/provider.dart';
 

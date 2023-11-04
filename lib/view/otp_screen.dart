@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:phonenumberauth/controller/auth_provider.dart';
-import 'package:phonenumberauth/view/home/home_screen.dart';
-import 'package:phonenumberauth/view/user_information/user_information_screen.dart';
+import 'package:phonenumberauth/view/home_screen.dart';
+import 'package:phonenumberauth/view/user_information_screen.dart';
 import 'package:phonenumberauth/widget/custom_button.dart';
 import 'package:phonenumberauth/widget/snackbar.dart';
 import 'package:pinput/pinput.dart';

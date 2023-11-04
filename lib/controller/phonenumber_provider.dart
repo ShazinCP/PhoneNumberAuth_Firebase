@@ -49,7 +49,7 @@ class PhoneProvider extends ChangeNotifier {
   }
 
 
-    ////////////Crud Functions//////////////
+    //////////// Crud Functions //////////////
 
   final FirebaseServices firebaseServices = FirebaseServices();
 
@@ -66,7 +66,6 @@ class PhoneProvider extends ChangeNotifier {
   }
 
   void updateTask(String docId) async {
-
     final user = UserModel(
       name: nameController.text, 
       email: emailController.text, 
@@ -81,13 +80,4 @@ class PhoneProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-    // UserModel userModel = UserModel(
-    //   name: nameController.text.trim(),
-    //   email: emailController.text.trim(),
-    //   bio: bioController.text.trim(),
-    //   profilePic: "",
-    //   createdAt: "",
-    //   phoneNumber: "",
-    //   uid: "",
-    // );
 }

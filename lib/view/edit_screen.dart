@@ -6,9 +6,7 @@ import 'package:phonenumberauth/controller/auth_provider.dart';
 import 'package:phonenumberauth/controller/internet_connectivity_provider.dart';
 import 'package:phonenumberauth/controller/phonenumber_provider.dart';
 import 'package:phonenumberauth/helper/colors.dart';
-import 'package:phonenumberauth/model/user_model.dart';
 import 'package:phonenumberauth/widget/snackbar.dart';
-import 'package:phonenumberauth/view/home/home_screen.dart';
 import 'package:phonenumberauth/widget/custom_button.dart';
 import 'package:phonenumberauth/widget/textfield.dart';
 import 'package:provider/provider.dart';
@@ -50,7 +48,7 @@ class _EditScreenState extends State<EditScreen> {
     value.nameController.text = args['name'];
     value.emailController.text = args['email'];
     value.bioController.text = args['bio'];
-    // value.
+    final docId = args['id'];
     return Scaffold(
       appBar: AppBar(
         title: const Text("Edit User"),
@@ -132,7 +130,10 @@ class _EditScreenState extends State<EditScreen> {
                         width: fullWidth * 0.90,
                         child: CustomButton(
                           text: "Update",
-                          onpressed: () => storeData(),
+                          onpressed: () {
+                            value.updateTask(docId);
+                            Navigator.of(context).pop();
+                          },
                         ),
                       ),
                     ],
@@ -144,36 +145,36 @@ class _EditScreenState extends State<EditScreen> {
   }
 
 // store user data to database
-  void storeData() {
-    final data = Provider.of<AuthProvider>(context, listen: false);
-    final value = Provider.of<PhoneProvider>(context, listen: false);
-    UserModel userModel = UserModel(
-      name: value.nameController.text.trim(),
-      email: value.emailController.text.trim(),
-      bio: value.bioController.text.trim(),
-      profilePic: "",
-      createdAt: "",
-      phoneNumber: "",
-      uid: "",
-    );
-    if (image != null) {
-      data.saveUserDataToFirebase(
-        context: context,
-        userModel: userModel,
-        profilePic: image!,
-        onSuccess: () {
-          data.saveUserDataToSP().then((value) => data.setSignIn().then(
-                (value) => Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>  HomeScreen(),
-                    ),
-                    (route) => false),
-              ));
-        },
-      );
-    } else {
-      showSnackBar(context, "Please upload your profile photo");
-    }
-  }
+  // void storeData() {
+  //   final data = Provider.of<AuthProvider>(context, listen: false);
+  //   final value = Provider.of<PhoneProvider>(context, listen: false);
+  //   UserModel userModel = UserModel(
+  //     name: value.nameController.text.trim(),
+  //     email: value.emailController.text.trim(),
+  //     bio: value.bioController.text.trim(),
+  //     profilePic: "",
+  //     createdAt: "",
+  //     phoneNumber: "",
+  //     uid: "",
+  //   );
+  //   if (image != null) {
+  //     data.saveUserDataToFirebase(
+  //       context: context,
+  //       userModel: userModel,
+  //       profilePic: image!,
+  //       onSuccess: () {
+  //         data.saveUserDataToSP().then((value) => data.setSignIn().then(
+  //               (value) => Navigator.pushAndRemoveUntil(
+  //                   context,
+  //                   MaterialPageRoute(
+  //                     builder: (context) =>  HomeScreen(),
+  //                   ),
+  //                   (route) => false),
+  //             ));
+  //       },
+  //     );
+  //   } else {
+  //     showSnackBar(context, "Please upload your profile photo");
+  //   }
+  // }
 }
