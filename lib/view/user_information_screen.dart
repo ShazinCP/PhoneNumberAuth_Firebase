@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:phonenumberauth/constants/sizedbox.dart';
 import 'package:phonenumberauth/controller/auth_provider.dart';
@@ -21,7 +19,7 @@ class UserInformationScreen extends StatefulWidget {
 }
 
 class _UserInformationScreenState extends State<UserInformationScreen> {
-  File? image;
+  // File? image;
 
   @override
   void dispose() {
@@ -33,10 +31,10 @@ class _UserInformationScreenState extends State<UserInformationScreen> {
   }
 
   // for selecting image
-  void selectImage() async {
-    image = await pickImage(context);
-    setState(() {});
-  }
+  // void selectImage() async {
+  //   image = await pickImage(context);
+  //   setState(() {});
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -60,77 +58,79 @@ class _UserInformationScreenState extends State<UserInformationScreen> {
             : SingleChildScrollView(
                 padding:
                     const EdgeInsets.symmetric(vertical: 25.0, horizontal: 5.0),
-                child: Center(
-                  child: Column(
-                    children: [
-                      InkWell(
-                        onTap: () => selectImage(),
-                        child: image == null
-                            ? const CircleAvatar(
-                                backgroundColor: cPurpleColor,
-                                radius: 50,
-                                child: Icon(
-                                  Icons.account_circle,
-                                  size: 50,
-                                  color: cWhiteColor,
-                                ),
-                              )
-                            : CircleAvatar(
-                                backgroundImage: FileImage(image!),
-                                radius: 50,
-                              ),
-                      ),
-                      Container(
-                        width: fullWidth,
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 5, horizontal: 15),
-                        margin: const EdgeInsets.only(top: 20),
-                        child: Consumer<PhoneProvider>(
-                          builder: (context, value, child) {
-                            return Column(
-                              children: [
-                                // name field
-                                textField(
-                                  hintText: "Enter name",
-                                  icon: Icons.account_circle,
-                                  inputType: TextInputType.name,
-                                  maxLines: 1,
-                                  controller: value.nameController,
-                                ),
-
-                                // email
-                                textField(
-                                  hintText: "Enter your email",
-                                  icon: Icons.email,
-                                  inputType: TextInputType.emailAddress,
-                                  maxLines: 1,
-                                  controller: value.emailController,
-                                ),
-
-                                // bio
-                                textField(
-                                  hintText: "Enter your bio here...",
-                                  icon: Icons.edit,
-                                  inputType: TextInputType.name,
-                                  maxLines: 2,
-                                  controller: value.bioController,
-                                ),
-                              ],
-                            );
+                child: Consumer<PhoneProvider>(
+                  builder: (context, value, child) {
+                    return  Center(
+                    child: Column(
+                      children: [
+                        InkWell(
+                          onTap: () async{
+                           await value.selectImage(context);
                           },
+                          child: value.image == null
+                              ? const CircleAvatar(
+                                  backgroundColor: cPurpleColor,
+                                  radius: 50,
+                                  child: Icon(
+                                    Icons.account_circle,
+                                    size: 50,
+                                    color: cWhiteColor,
+                                  ),
+                                )
+                              : CircleAvatar(
+                                  backgroundImage: FileImage(value.image!),
+                                  radius: 50,
+                                ),
                         ),
-                      ),
-                      cHeight20,
-                      SizedBox(
-                        height: 50,
-                        width: fullWidth * 0.90,
-                        child: CustomButton(
-                          text: "Continue",
-                          onpressed: () => storeData(),
+                        Container(
+                          width: fullWidth,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 5, horizontal: 15),
+                          margin: const EdgeInsets.only(top: 20),
+                          child: Column(
+                            children: [
+                              // name field
+                              textField(
+                                hintText: "Enter name",
+                                icon: Icons.account_circle,
+                                inputType: TextInputType.name,
+                                maxLines: 1,
+                                controller: value.nameController,
+                              ),
+                
+                              // email
+                              textField(
+                                hintText: "Enter your email",
+                                icon: Icons.email,
+                                inputType: TextInputType.emailAddress,
+                                maxLines: 1,
+                                controller: value.emailController,
+                              ),
+                
+                              // bio
+                              textField(
+                                hintText: "Enter your bio here...",
+                                icon: Icons.edit,
+                                inputType: TextInputType.name,
+                                maxLines: 2,
+                                controller: value.bioController,
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
+                        cHeight20,
+                        SizedBox(
+                          height: 50,
+                          width: fullWidth * 0.90,
+                          child: CustomButton(
+                            text: "Continue",
+                            onpressed: () => storeData(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                  },
                 ),
               ),
       ),
@@ -150,11 +150,11 @@ class _UserInformationScreenState extends State<UserInformationScreen> {
       phoneNumber: "",
       uid: "",
     );
-    if (image != null) {
+    if (value.image != null) {
       data.saveUserDataToFirebase(
         context: context,
         userModel: userModel,
-        profilePic: image!,
+        profilePic: value.image!,
         onSuccess: () {
           data.saveUserDataToSP().then((value) => data.setSignIn().then(
                 (value) => Navigator.pushAndRemoveUntil(

@@ -21,14 +21,14 @@ class EditScreen extends StatefulWidget {
 class _EditScreenState extends State<EditScreen> {
   File? image;
 
-  @override
-  void dispose() {
-    super.dispose();
-    final value = Provider.of<PhoneProvider>(context, listen: false);
-    value.nameController.dispose();
-    value.emailController.dispose();
-    value.bioController.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   final value = Provider.of<PhoneProvider>(context, listen: false);
+  //   value.nameController.dispose();
+  //   value.emailController.dispose();
+  //   value.bioController.dispose();
+  // }
 
   // for selecting image
   void selectImage() async {
@@ -48,7 +48,8 @@ class _EditScreenState extends State<EditScreen> {
     value.nameController.text = args['name'];
     value.emailController.text = args['email'];
     value.bioController.text = args['bio'];
-    final docId = args['id'];
+    value.phoneController.text = args['phoneNumber'];
+    final docId = args['createdAt'];
     return Scaffold(
       appBar: AppBar(
         title: const Text("Edit User"),
@@ -131,6 +132,10 @@ class _EditScreenState extends State<EditScreen> {
                         child: CustomButton(
                           text: "Update",
                           onpressed: () {
+                            value.nameController;
+                            value.emailController;
+                            value.bioController;
+                            value.phoneController;
                             value.updateTask(docId);
                             Navigator.of(context).pop();
                           },
@@ -143,38 +148,4 @@ class _EditScreenState extends State<EditScreen> {
       ),
     );
   }
-
-// store user data to database
-  // void storeData() {
-  //   final data = Provider.of<AuthProvider>(context, listen: false);
-  //   final value = Provider.of<PhoneProvider>(context, listen: false);
-  //   UserModel userModel = UserModel(
-  //     name: value.nameController.text.trim(),
-  //     email: value.emailController.text.trim(),
-  //     bio: value.bioController.text.trim(),
-  //     profilePic: "",
-  //     createdAt: "",
-  //     phoneNumber: "",
-  //     uid: "",
-  //   );
-  //   if (image != null) {
-  //     data.saveUserDataToFirebase(
-  //       context: context,
-  //       userModel: userModel,
-  //       profilePic: image!,
-  //       onSuccess: () {
-  //         data.saveUserDataToSP().then((value) => data.setSignIn().then(
-  //               (value) => Navigator.pushAndRemoveUntil(
-  //                   context,
-  //                   MaterialPageRoute(
-  //                     builder: (context) =>  HomeScreen(),
-  //                   ),
-  //                   (route) => false),
-  //             ));
-  //       },
-  //     );
-  //   } else {
-  //     showSnackBar(context, "Please upload your profile photo");
-  //   }
-  // }
 }

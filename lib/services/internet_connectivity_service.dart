@@ -29,7 +29,7 @@ class InternetConnectivityServices {
       context: context,
       builder: (context) => CupertinoAlertDialog(
         title: const Text("No Connection"),
-        content: const Text("Please check your internet connectivity"),
+        content: const Text("Please check your internet connection"),
         actions: <Widget>[
           TextButton(
               onPressed: () async {

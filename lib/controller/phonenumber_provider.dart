@@ -1,15 +1,21 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_picker/country_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:phonenumberauth/model/user_model.dart';
 import 'package:phonenumberauth/services/firebase_services.dart';
+import 'package:phonenumberauth/widget/snackbar.dart';
 
 class PhoneProvider extends ChangeNotifier {
-    PickedFile? _image;
+  File? image;
 
   final TextEditingController _phoneController = TextEditingController();
-
   TextEditingController get phoneController => _phoneController;
+
+  String _otpCode = '';
+  String get otpCode => _otpCode;
 
   List<UserModel> users = [];
 
@@ -17,8 +23,7 @@ class PhoneProvider extends ChangeNotifier {
   final emailController = TextEditingController();
   final bioController = TextEditingController();
 
-
-    Country selectedCountry = Country(
+  Country selectedCountry = Country(
     phoneCode: "91",
     countryCode: "IN",
     e164Sc: 0,
@@ -41,43 +46,59 @@ class PhoneProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-   PickedFile? get image => _image;
+  // Future pickImage(BuildContext context) async {
+  //   _image = await pickImage(context);
+  //   notifyListeners();
+  // }
 
-  Future pickImage(BuildContext context) async {
-    _image = await pickImage(context);
+  // Image? _image;
+
+  // Image? get image => _image;
+
+  Future<void> selectImage(BuildContext context) async {
+    image = await pickImage(context);
     notifyListeners();
   }
 
+  set otpCode(String value) {
+    _otpCode = value;
+    notifyListeners();
+  }
 
-    //////////// Crud Functions //////////////
+  /////////// FIREBASE EDIT //////////////
 
   final FirebaseServices firebaseServices = FirebaseServices();
-
 
   Future<void> fetchTasks() async {
     users = await firebaseServices.fetchUser();
     notifyListeners();
   }
 
-  Future<void> deleteUser(String docId) async {
-    firebaseServices.deleteUser(docId);
-    await fetchTasks();
-    notifyListeners();
-  }
-
   void updateTask(String docId) async {
-    final user = UserModel(
-      name: nameController.text, 
-      email: emailController.text, 
-      bio: bioController.text, 
-      profilePic: "", 
-      createdAt: docId,
-       phoneNumber: phoneController.text, 
-       uid: phoneController.text,
-       );
-    firebaseServices.updateUser(user);
+    // final user = UserModel(
+    //   name: nameController.text,
+    //   email: emailController.text,
+    //   bio: bioController.text,
+    //   profilePic: "",
+    //   createdAt: docId,
+    //    phoneNumber: "",
+    //    uid: "",
+    //    );
+    FirebaseFirestore.instance.collection('users').doc(docId).update({
+      'name': nameController.text,
+      'email': emailController.text,
+      'bio': bioController.text,
+      'profilePic': image,
+      'createdAt': docId,
+      'phoneNumber': phoneController.text,
+    });
+    // firebaseServices.updateUser(user);
     await fetchTasks();
     notifyListeners();
   }
 
+  //////// GOOGLE SIGN IN ///////
+  Future<UserCredential> signInWithGoogle() async {
+    return firebaseServices.signInWithGoogle();
+  }
 }

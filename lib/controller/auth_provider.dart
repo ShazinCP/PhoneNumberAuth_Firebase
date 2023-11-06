@@ -29,14 +29,14 @@ class AuthProvider extends ChangeNotifier {
   }
 
   void checkSign() async {
-    final SharedPreferences s = await SharedPreferences.getInstance();
-    _isSignedIn = s.getBool("is_signedin") ?? false;
+    final SharedPreferences sharedPref = await SharedPreferences.getInstance();
+    _isSignedIn = sharedPref.getBool("is_signedin") ?? false;
     notifyListeners();
   }
 
   Future setSignIn() async {
-    final SharedPreferences s = await SharedPreferences.getInstance();
-    s.setBool("is_signedin", true);
+    final SharedPreferences sharedPref = await SharedPreferences.getInstance();
+    sharedPref.setBool("is_signedin", true);
     _isSignedIn = true;
     notifyListeners();
   }
@@ -104,10 +104,10 @@ class AuthProvider extends ChangeNotifier {
     DocumentSnapshot snapshot =
         await _firebaseFirestore.collection("users").doc(_uid).get();
     if (snapshot.exists) {
-      print("USER EXISTS");
+      debugPrint("USER EXISTS");
       return true;
     } else {
-      print("NEW USER");
+      debugPrint("NEW USER");
       return false;
     }
   }
@@ -176,23 +176,23 @@ class AuthProvider extends ChangeNotifier {
 
   // STORING DATA LOCALLY
   Future saveUserDataToSP() async {
-    SharedPreferences s = await SharedPreferences.getInstance();
-    await s.setString("user_model", jsonEncode(userModel.toMap()));
+    SharedPreferences sharedPref = await SharedPreferences.getInstance();
+    await sharedPref.setString("user_model", jsonEncode(userModel.toMap()));
   }
 
   Future getDataFromSP() async {
-    SharedPreferences s = await SharedPreferences.getInstance();
-    String data = s.getString("user_model") ?? '';
+    SharedPreferences sharedPref = await SharedPreferences.getInstance();
+    String data = sharedPref.getString("user_model") ?? '';
     _userModel = UserModel.fromMap(jsonDecode(data));
     _uid = _userModel!.uid;
     notifyListeners();
   }
 
   Future userSignOut() async {
-    SharedPreferences s = await SharedPreferences.getInstance();
+    SharedPreferences sharedPref = await SharedPreferences.getInstance();
     await _firebaseAuth.signOut();
     _isSignedIn = false;
     notifyListeners();
-    s.clear();
+    sharedPref.clear();
   }
 }
