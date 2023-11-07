@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_picker/country_picker.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:phonenumberauth/model/user_model.dart';
 import 'package:phonenumberauth/services/firebase_services.dart';
@@ -66,7 +65,6 @@ class PhoneProvider extends ChangeNotifier {
   }
 
   /////////// FIREBASE EDIT //////////////
-
   final FirebaseServices firebaseServices = FirebaseServices();
 
   Future<void> fetchTasks() async {
@@ -98,7 +96,8 @@ class PhoneProvider extends ChangeNotifier {
   }
 
   //////// GOOGLE SIGN IN ///////
-  Future<UserCredential> signInWithGoogle() async {
-    return firebaseServices.signInWithGoogle();
-  }
+  // Future<UserCredential> signInWithGoogle() async {
+  //   final result = await firebaseServices.signInWithGoogle();
+  //   return result;
+  // }
 }

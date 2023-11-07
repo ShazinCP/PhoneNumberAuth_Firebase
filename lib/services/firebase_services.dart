@@ -4,7 +4,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:phonenumberauth/model/user_model.dart';
 
 class FirebaseServices {
-  
   final CollectionReference firebaseUsers =
       FirebaseFirestore.instance.collection('users');
 
@@ -21,21 +20,39 @@ class FirebaseServices {
   }
 
 
-    //google sign in
-  signInWithGoogle()async{
-     // Trigger the authentication flow
-  final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+   ///// GOOGLE SIGN IN ////////
+  Future<UserCredential?> signInWithGoogle() async {
+    try {
+      // Trigger the authentication flow
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-  // Obtain the auth details from the request
-  final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+      if (googleUser == null) {
+        // Handle the case where the user cancels the sign-in process
+        return null;
+      }
 
-  // Create a new credential
-  final credential = GoogleAuthProvider.credential(
-    accessToken: googleAuth?.accessToken,
-    idToken: googleAuth?.idToken,
-  );
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
 
-  // Once signed in, return the UserCredential
-  return await FirebaseAuth.instance.signInWithCredential(credential);
+      // Create a new credential
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      // Sign in to Firebase with the Google credential
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+
+      // Return the UserCredential
+      return userCredential;
+    } catch (e) {
+      // Handle any errors that occurred during the sign-in process
+      print('Error signing in with Google: $e');
+      return null;
+    }
   }
 }
+
+

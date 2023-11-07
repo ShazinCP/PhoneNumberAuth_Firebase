@@ -41,7 +41,7 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // signin
+  ///////// SIGNIN ////////
   void signInWithPhone(BuildContext context, String phoneNumber) async {
     try {
       await _firebaseAuth.verifyPhoneNumber(
@@ -68,7 +68,7 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  // verify otp
+  //////// VERIFY OTP /////////
   void verifyOtp({
     required BuildContext context,
     required String verificationId,
@@ -85,7 +85,7 @@ class AuthProvider extends ChangeNotifier {
       User? user = (await _firebaseAuth.signInWithCredential(creds)).user;
 
       if (user != null) {
-        // carry our logic
+        // LOGIC
         _uid = user.uid;
         onSuccess();
       }
@@ -99,7 +99,7 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  // DATABASE OPERTAIONS
+  //////// DATABASE OPERTAIONS ///////////
   Future<bool> checkExistingUser() async {
     DocumentSnapshot snapshot =
         await _firebaseFirestore.collection("users").doc(_uid).get();
@@ -121,7 +121,7 @@ class AuthProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     try {
-      // uploading image to firebase storage.
+      ////////// UPLOADING IMAGE TO FIREBASE STORAGE //////////
       await storeFileToStorage("profilePic/$_uid", profilePic).then((value) {
         userModel.profilePic = value;
         userModel.createdAt = DateTime.now().millisecondsSinceEpoch.toString();
@@ -130,7 +130,7 @@ class AuthProvider extends ChangeNotifier {
       });
       _userModel = userModel;
 
-      // uploading to database
+      ////// UPLOADING TO DATABASE ////////
       await _firebaseFirestore
           .collection("users")
           .doc(_uid)
@@ -188,6 +188,8 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+
+  /////// SIGNOUT //////////
   Future userSignOut() async {
     SharedPreferences sharedPref = await SharedPreferences.getInstance();
     await _firebaseAuth.signOut();

@@ -6,6 +6,7 @@ import 'package:phonenumberauth/controller/auth_provider.dart';
 import 'package:phonenumberauth/controller/internet_connectivity_provider.dart';
 import 'package:phonenumberauth/controller/phonenumber_provider.dart';
 import 'package:phonenumberauth/helper/colors.dart';
+import 'package:phonenumberauth/services/firebase_services.dart';
 import 'package:phonenumberauth/widget/custom_button.dart';
 import 'package:provider/provider.dart';
 
@@ -142,7 +143,9 @@ class RegisterScreen extends StatelessWidget {
                         height: 50,
                         child: CustomButton(
                           text: "Login",
-                          onpressed: () => sendPhoneNumber(context),
+                          onpressed:() {
+                            sendPhoneNumber(context);
+                          },
                         ),
                       ),
                       cHeight60,
@@ -165,7 +168,8 @@ class RegisterScreen extends StatelessWidget {
                       cHeight15,
                       GestureDetector(
                         onTap: () {
-                          data.signInWithGoogle();
+                          // data.signInWithGoogle();
+                          FirebaseServices().signInWithGoogle();
                         },
                         child: Container(
                           height: 60,
