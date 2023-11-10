@@ -28,9 +28,6 @@ class MyApp extends StatelessWidget {
          ChangeNotifierProvider(
           create: (context) => PhoneProvider(),
         ),
-        // ChangeNotifierProvider(
-        //   create: (context) => GoogleAuthProvider(),
-        // ),
          ChangeNotifierProvider(
           create: (context) => InternetConnectivityProvider(),
         ),

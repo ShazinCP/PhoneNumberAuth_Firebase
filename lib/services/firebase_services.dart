@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:phonenumberauth/model/user_model.dart';
 
@@ -49,7 +50,7 @@ class FirebaseServices {
       return userCredential;
     } catch (e) {
       // Handle any errors that occurred during the sign-in process
-      print('Error signing in with Google: $e');
+      debugPrint('Error signing in with Google: $e');
       return null;
     }
   }

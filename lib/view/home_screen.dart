@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:phonenumberauth/constants/sizedbox.dart';
 import 'package:phonenumberauth/controller/auth_provider.dart';
 import 'package:phonenumberauth/controller/internet_connectivity_provider.dart';
+import 'package:phonenumberauth/controller/phonenumber_provider.dart';
 import 'package:phonenumberauth/helper/colors.dart';
 import 'package:phonenumberauth/view/welcome_screen.dart';
 import 'package:phonenumberauth/widget/uppercase.dart';
@@ -15,6 +16,7 @@ class HomeScreen extends StatelessWidget {
     Provider.of<InternetConnectivityProvider>(context, listen: false)
         .getInternetConnectivity(context);
     final data = Provider.of<AuthProvider>(context, listen: false);
+    final value = Provider.of<PhoneProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: cPurpleColor,
@@ -33,6 +35,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                   );
+                value.phoneController.clear();
             },
             icon: const Icon(Icons.exit_to_app),
           ),
@@ -42,32 +45,32 @@ class HomeScreen extends StatelessWidget {
           child: Column(
         children: [
           cHeight10,
-          SizedBox(
-            height: 60,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                IconButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/EditScreen', arguments: {
-                        'name': data.userModel.name,
-                        'email': data.userModel.email,
-                        'bio': data.userModel.bio,
-                        'phoneNumber': data.userModel.phoneNumber,
-                        'createdAt': data.userModel.createdAt,
-                        'uid': data.userModel.uid
-                      });
-                    },
-                    icon: const Icon(
-                      Icons.edit,
-                      color: cBlueColor,
-                      size: 30,
-                    )),
-                cWidth10
-              ],
-            ),
-          ),
+          // SizedBox(
+          //   height: 60,
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.end,
+          //     crossAxisAlignment: CrossAxisAlignment.start,
+          //     children: [
+          //       IconButton(
+          //           onPressed: () {
+          //             Navigator.pushNamed(context, '/EditScreen', arguments: {
+          //               'name': data.userModel.name,
+          //               'email': data.userModel.email,
+          //               'bio': data.userModel.bio,
+          //               'phoneNumber': data.userModel.phoneNumber,
+          //               'createdAt': data.userModel.createdAt,
+          //               'uid': data.userModel.uid
+          //             });
+          //           },
+          //           icon: const Icon(
+          //             Icons.edit,
+          //             color: cBlueColor,
+          //             size: 30,
+          //           )),
+          //       cWidth10
+          //     ],
+          //   ),
+          // ),
           CircleAvatar(
             backgroundColor: cPurpleColor,
             backgroundImage: NetworkImage(data.userModel.profilePic),

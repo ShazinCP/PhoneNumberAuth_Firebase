@@ -70,6 +70,7 @@ class RegisterScreen extends StatelessWidget {
                         cursorColor: cPurpleColor,
                         controller: data.phoneController,
                         keyboardType: TextInputType.phone,
+                        maxLength: 10,
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -148,7 +149,7 @@ class RegisterScreen extends StatelessWidget {
                           },
                         ),
                       ),
-                      cHeight60,
+                      cHeight100,
                       Row(
                         children: [
                           Expanded(
@@ -158,7 +159,7 @@ class RegisterScreen extends StatelessWidget {
                           cWidth15,
                           const Text('Or'),
                           cWidth15,
-                          cHeight10,
+                          cHeight25,
                           Expanded(
                             child: Divider(
                                 thickness: 0.5, color: cGreyColorShade400),
@@ -189,7 +190,7 @@ class RegisterScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      cHeight80,
+                      cHeight25,
                       const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
